@@ -1,41 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog'
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'
+
+import { filter } from 'rxjs/operators'
 
 import { ProductsService } from '../../shared/services/products.service'
 import { Product } from '../../shared/interfaces/IProduct'
+import { ConfirmationDialogService } from '../../shared/services/confirmation-dialog.service'
 
 import { CardComponent } from './components/card/card.component'
-import { filter } from 'rxjs'
 
-@Component({
-  selector: 'app-confirmation-dialog',
-  template: `
-    <h2 mat-dialog-title>Delete Product</h2>
-    <mat-dialog-content>
-      Are you sure you want to delete this product?
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onNo()">No</button>
-      <button mat-raised-button color="accent"  (click)="onYes()" cdkFocusInitial>Yes</button>
-    </mat-dialog-actions>
-  `,
-  standalone: true,
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ConfirmationDialogComponent {
-  matDialogRef = inject(MatDialogRef)
 
-  onYes() {
-    this.matDialogRef.close(true)
-  }
-
-  onNo() {
-    this.matDialogRef.close(false)
-  }
-}
 @Component({
   selector: 'app-list',
   standalone: true,
@@ -50,6 +26,8 @@ export class ListComponent {
   productsService = inject(ProductsService)
   router = inject(Router)
   matDialog = inject(MatDialog)
+  confirmationDialgService = inject(ConfirmationDialogService)
+
 
 
   ngOnInit() {
@@ -63,10 +41,9 @@ export class ListComponent {
   }
 
   onDelete(product: Product) {
-    this.matDialog.open(ConfirmationDialogComponent)
-      .afterClosed()
-      .pipe(filter((answer) => answer === true))
-      .subscribe(() => {
+    this.confirmationDialgService.openDialog()
+    .pipe(filter ((answer) => answer === true))
+    .subscribe(() => {
         this.productsService.delete(product.id).subscribe(() => {
           this.ngOnInit()
         })
