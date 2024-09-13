@@ -1,0 +1,10 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+  <div class="form-content-container">
+    <mat-form-field>
+      <mat-label>Input</mat-label>
+      <input matInput formControlName="title" type="text" placeholder="Title">
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Save</button>
+  </div>
+</form>
+

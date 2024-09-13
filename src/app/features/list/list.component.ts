@@ -1,14 +1,11 @@
 import { Component, inject } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
-
 import { MatButtonModule } from '@angular/material/button'
 
-import { CardComponent } from './components/card/card.component'
-
 import { ProductsService } from '../../shared/services/products.service'
-
 import { Product } from '../../shared/interfaces/IProduct'
 
+import { CardComponent } from './components/card/card.component'
 
 
 
